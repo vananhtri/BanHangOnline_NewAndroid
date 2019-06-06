@@ -1,72 +1,51 @@
 package com.example.vananh.banhangfuniture.Model;
 
+import java.util.List;
+
 public class OderCustomer {
     int MaDatHang;
     String NgayDat;
-    String TenSanPham;
-    String ThanhTien;
-    int SoLuong;
-    String Hinh;
-
+    Double TongTien;
+    List<Product> products;
     public OderCustomer() {
     }
 
-    public OderCustomer(int maDatHang, String ngayDat, String tenSanPham, String thanhTien, int soLuong, String hinh) {
+    public OderCustomer(int maDatHang, String ngayDat, Double tongTien, List<Product> products) {
         MaDatHang = maDatHang;
         NgayDat = ngayDat;
-        TenSanPham = tenSanPham;
-        ThanhTien = thanhTien;
-        SoLuong = soLuong;
-        Hinh = hinh;
-    }
-
-
-    public void setMaDatHang(int maDatHang) {
-        MaDatHang = maDatHang;
-    }
-
-    public void setNgayDat(String ngayDat) {
-        NgayDat = ngayDat;
-    }
-
-    public void setTenSanPham(String tenSanPham) {
-        TenSanPham = tenSanPham;
-    }
-
-    public void setThanhTien(String thanhTien) {
-        ThanhTien = thanhTien;
-    }
-
-    public void setSoLuong(int soLuong) {
-        SoLuong = soLuong;
-    }
-
-    public void setHinh(String hinh) {
-        Hinh = hinh;
+        TongTien = tongTien;
+        this.products = products;
     }
 
     public int getMaDatHang() {
         return MaDatHang;
     }
 
+    public void setMaDatHang(int maDatHang) {
+        MaDatHang = maDatHang;
+    }
+
     public String getNgayDat() {
         return NgayDat;
     }
 
-    public String getTenSanPham() {
-        return TenSanPham;
+    public void setNgayDat(String ngayDat) {
+        NgayDat = ngayDat;
     }
 
-    public String getThanhTien() {
-        return ThanhTien;
+    public Double getTongTien() {
+        return TongTien;
     }
 
-    public int getSoLuong() {
-        return SoLuong;
+    public void setTongTien(Double tongTien) {
+        TongTien = tongTien;
     }
 
-    public String getHinh() {
-        return Hinh;
+    public List<Product> getProducts() {
+        return products;
     }
 
+    public void setProducts(List<Product> products) {
+        this.products = products;
+    }
 }

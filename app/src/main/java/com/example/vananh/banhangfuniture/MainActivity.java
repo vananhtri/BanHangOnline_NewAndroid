@@ -1,6 +1,5 @@
 package com.example.vananh.banhangfuniture;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -16,11 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.example.vananh.banhangfuniture.ChucNang.FragDaDat;
 import com.example.vananh.banhangfuniture.ChucNang.FragDangNhap;
 import com.example.vananh.banhangfuniture.ChucNang.FragDoiMatKhau;
+import com.example.vananh.banhangfuniture.ChucNang.FragDonHang;
 import com.example.vananh.banhangfuniture.ChucNang.FragHome;
-import com.example.vananh.banhangfuniture.ChucNang.XemDonHang;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -122,9 +120,9 @@ public class MainActivity extends AppCompatActivity
             manager.beginTransaction().replace(R.id.main_contents, fragDoiMatKhau, fragDoiMatKhau.getTag()).addToBackStack(null).commit();
 
         } else if (id == R.id.nav_XemDonHang) {
-            FragDaDat fragDaDat= new FragDaDat();
+            FragDonHang fragDonHang= new FragDonHang();
             FragmentManager manager= getSupportFragmentManager();
-            manager.beginTransaction().replace(R.id.main_contents, fragDaDat, fragDaDat.getTag()).addToBackStack(null).commit();
+            manager.beginTransaction().replace(R.id.main_contents, fragDonHang, fragDonHang.getTag()).addToBackStack(null).commit();
 
         }
 
