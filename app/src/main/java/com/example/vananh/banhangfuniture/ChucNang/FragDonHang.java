@@ -93,7 +93,7 @@ public class FragDonHang extends Fragment {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getActivity().getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this.getChildFragmentManager());
         adapter.addFragment(new FragDatHang(), "Đã đặt");
         adapter.addFragment(new FragDangGiao(),"Đang giao");
         adapter.addFragment(new FragDaGiao(),"Đã giao");
@@ -138,6 +138,11 @@ public class FragDonHang extends Fragment {
         @Override
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
+        }
+
+        @Override
+        public int getItemPosition(@NonNull Object object) {
+            return super.getItemPosition(object);
         }
     }
 }
