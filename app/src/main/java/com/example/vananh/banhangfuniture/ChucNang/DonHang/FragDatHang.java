@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -133,7 +137,7 @@ public class FragDatHang extends Fragment {
         int idCustomer = customerInfo.getId();
         int orderStatus = 1; // Đã đặt
         RequestQueue queue = Volley.newRequestQueue(getContext());
-        String url = Constant.BASE_URL + "orderManagement/getOderByState?status="+orderStatus +"&idCustomer="+idCustomer;
+        String url = Constant.BASE_URL + "orderManagement/GetOderByStateByMobile?status="+orderStatus +"&idCustomer="+idCustomer;
         JSONObject jsonObject = new JSONObject();
 
         final JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
@@ -167,23 +171,26 @@ public class FragDatHang extends Fragment {
         List<OderCustomer> oderCustomers = new ArrayList<>();
         List<Product> products= new ArrayList<>();
         try {
-            JSONArray arrayOrders = new JSONArray(jsonObject);
+            // get array orders
+            JSONArray arrayOrders = jsonObject.getJSONArray("orders");
             for(int i = 0; i<arrayOrders.length();i++){
                 JSONObject obj = arrayOrders.getJSONObject(i);
                 OderCustomer oderCustomer = new OderCustomer();
                 oderCustomer.setMaDatHang(obj.getInt("Id_DatHang"));
-                oderCustomer.setNgayDat(obj.getString("NgayDat"));
-                oderCustomer.setTongTien(obj.getDouble("Id_DatHang"));
+
+                //
+                oderCustomer.setNgayDat(ConvertToDate(obj.getString("NgayDat")));
+                oderCustomer.setTongTien(obj.getDouble("TongTien"));
 
                 //products
-                JSONArray arrayProducts = new JSONArray(obj.getJSONObject("order"));
+                JSONArray arrayProducts = obj.getJSONArray("order");
                 for (int j = 0;j<arrayProducts.length();j++){
                     JSONObject objProduct = arrayProducts.getJSONObject(j);
                     Product product = new Product();
                     product.setHinh(objProduct.getString("Hinh"));
                     product.setTenSanPham(objProduct.getString("Tensp"));
                     product.setSoLuong(objProduct.getInt("Soluong"));
-                    product.setHinh(objProduct.getString("ThanhTien"));
+                    product.setThanhTien(objProduct.getString("ThanhTien"));
 
                     products.add(product);
                 }
@@ -196,6 +203,15 @@ public class FragDatHang extends Fragment {
             e.printStackTrace();
         }
         return oderCustomers;
+    }
+    private  String ConvertToDate(String date){
+        date = date.replace("/Date(", "")
+                    .replace(")","");
+        long millisecond = Long.parseLong(date);
+        // or you already have long value of date, use this instead of milliseconds variable.
+        String dateString = DateFormat.format("dd/MM/yyyy", new Date(millisecond)).toString();
+        return  dateString;
+
     }
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

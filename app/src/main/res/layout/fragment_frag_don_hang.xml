@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ChucNang.FragDonHang">
     <!-- > Tab control<!-->
     <android.support.design.widget.AppBarLayout
@@ -13,13 +14,16 @@
         <android.support.design.widget.TabLayout
             android:id="@+id/tabs"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-             />
-
+            android:layout_height="match_parent"
+            app:tabGravity="fill"
+            app:tabMode="fixed"
+            />
+        <!--> fixed top<!-->
     </android.support.design.widget.AppBarLayout>
  <!-- > Nội dung thay đổi<!-->
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />

@@ -37,7 +37,7 @@ public class DatHangAdapter extends ArrayAdapter<OderCustomer> {
         ListView lvCTDatHang = convertView.findViewById(R.id.lsvCTDonHang);
         OderCustomer oderCustomer = getItem(position);
         if(oderCustomer !=null){
-            tvMaDatHang.setText(oderCustomer.getMaDatHang());
+            tvMaDatHang.setText(String.valueOf(oderCustomer.getMaDatHang()));
             tvNgayDat.setText(oderCustomer.getNgayDat());
             tvTongTien.setText(oderCustomer.getTongTien().toString());
 

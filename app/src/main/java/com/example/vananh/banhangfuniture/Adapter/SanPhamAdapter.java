@@ -45,7 +45,7 @@ public class SanPhamAdapter extends ArrayAdapter<Product> {
         if(product !=null){
 
             tvTenSP.setText(product.getTenSanPham());
-            tvSoLuong.setText(product.getSoLuong());
+            tvSoLuong.setText(String.valueOf(product.getSoLuong()));
             tvThanhTien.setText(product.getThanhTien());
             String urlImage =  product.getHinh();
             if(!urlImage.isEmpty()) {
