@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -35,10 +36,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import pl.droidsonroids.gif.GifDrawable;
+import pl.droidsonroids.gif.GifImageView;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -65,7 +70,7 @@ public class FragDatHang extends Fragment {
     private DatHangAdapter datHangAdapter;
     private List<OderCustomer> oderCustomers;
     private ListView lvDatHang;
-
+    private GifImageView gifImageView;
     public FragDatHang() {
         // Required empty public constructor
     }
@@ -108,11 +113,22 @@ public class FragDatHang extends Fragment {
 
 
     @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         lvDatHang = getActivity().findViewById(R.id.lsvDatHang);
         oderCustomers = new ArrayList<>();
+        gifImageView = getActivity().findViewById(R.id.gifLoading);
 
         //get info customer
         SharedPreferences mPrefs = getContext().getSharedPreferences("MyPref", MODE_PRIVATE);
@@ -137,6 +153,7 @@ public class FragDatHang extends Fragment {
 
 
     private void getData(CustomerInfo customerInfo) {
+        gifImageView.setVisibility(View.VISIBLE); // sho loading
         int idCustomer = customerInfo.getId();
         int orderStatus = 1; // Đã đặt
         RequestQueue queue = Volley.newRequestQueue(getContext());
@@ -146,7 +163,7 @@ public class FragDatHang extends Fragment {
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray jsonArray) {
-
+                        gifImageView.setVisibility(View.INVISIBLE); //hide loading
                         Gson gson = new Gson();
 
                         Type typeOfT = new TypeToken<List<OderCustomer>>() {
@@ -163,9 +180,14 @@ public class FragDatHang extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                gifImageView.setVisibility(View.INVISIBLE); //hide loading
                 Toast.makeText(getContext(), volleyError.toString(), Toast.LENGTH_LONG).show();
             }
         });
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                5000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(stringRequest);
         //code
 

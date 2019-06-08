@@ -5,6 +5,16 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ChucNang.DonHang.FragDatHang">
+
+    <pl.droidsonroids.gif.GifImageView
+        android:layout_width="100dp"
+        android:layout_gravity="center"
+        android:layout_height="match_parent"
+        android:src="@drawable/loading"
+        android:id="@+id/gifLoading"
+        android:visibility="invisible"
+        />
+
 <ListView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
