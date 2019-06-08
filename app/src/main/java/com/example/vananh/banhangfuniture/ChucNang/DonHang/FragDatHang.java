@@ -1,8 +1,10 @@
 package com.example.vananh.banhangfuniture.ChucNang.DonHang;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -151,7 +154,7 @@ public class FragDatHang extends Fragment {
 
                         Type typeOfT = new TypeToken<List<OderCustomer>>() {
                         }.getType();
-                        List<OderCustomer> orders = gson.fromJson(String.valueOf(jsonArray), typeOfT);
+                        final List<OderCustomer> orders = gson.fromJson(String.valueOf(jsonArray), typeOfT);
                         if (orders.size() <= 0) {
                             Toast.makeText(getContext(), "Bạn chưa có đơn hàng nào", Toast.LENGTH_LONG).show();
                             return;
@@ -159,6 +162,17 @@ public class FragDatHang extends Fragment {
                         oderCustomers = orders;
                         datHangAdapter = new DatHangAdapter(getContext(), oderCustomers);
                         lvDatHang.setAdapter(datHangAdapter);
+                        lvDatHang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                Intent intent = new Intent(getContext(), ActivityDetailOrder.class);
+                                OderCustomer order = orders.get(position);
+                                Bundle bundle = new Bundle();
+                                bundle.putParcelableArrayList("products", (ArrayList<Product>) order.getProducts());
+                                intent.putExtra("detail", bundle);
+                                startActivity(intent);
+                            }
+                        });
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -171,40 +185,6 @@ public class FragDatHang extends Fragment {
 
     }
 
-    private List<OderCustomer> parseData(JSONObject jsonObject) {
-        List<OderCustomer> oderCustomers = new ArrayList<>();
-        List<Product> products = new ArrayList<>();
-        try {
-            JSONArray arrayOrders = new JSONArray(jsonObject);
-            for (int i = 0; i < arrayOrders.length(); i++) {
-                JSONObject obj = arrayOrders.getJSONObject(i);
-                OderCustomer oderCustomer = new OderCustomer();
-                oderCustomer.setMaDatHang(obj.getInt("Id_DatHang"));
-                oderCustomer.setNgayDat(obj.getString("NgayDat"));
-                oderCustomer.setTongTien(obj.getDouble("Id_DatHang"));
-
-                //products
-                JSONArray arrayProducts = new JSONArray(obj.getJSONObject("order"));
-                for (int j = 0; j < arrayProducts.length(); j++) {
-                    JSONObject objProduct = arrayProducts.getJSONObject(j);
-                    Product product = new Product();
-                    product.setHinh(objProduct.getString("Hinh"));
-                    product.setTenSanPham(objProduct.getString("Tensp"));
-                    product.setSoLuong(objProduct.getInt("Soluong"));
-                    product.setHinh(objProduct.getString("ThanhTien"));
-
-                    products.add(product);
-                }
-
-                oderCustomer.setProducts(products);
-                oderCustomers.add(oderCustomer);
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return oderCustomers;
-    }
 
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {

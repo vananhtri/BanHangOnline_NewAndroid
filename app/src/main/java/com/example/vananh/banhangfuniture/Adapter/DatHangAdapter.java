@@ -35,7 +35,7 @@ public class DatHangAdapter extends ArrayAdapter<OderCustomer> {
         TextView tvMaDatHang = convertView.findViewById(R.id.DatHangMaDH);
         TextView tvTongTien = convertView.findViewById(R.id.DatHangTongTien);
         TextView tvNgayDat = convertView.findViewById(R.id.DatHangNgayDat);
-        ListView lvCTDatHang = convertView.findViewById(R.id.lsvCTDonHang);
+
         OderCustomer oderCustomer = getItem(position);
         if (oderCustomer != null) {
             tvMaDatHang.setText(String.valueOf(oderCustomer.getMaDatHang()));
@@ -43,9 +43,7 @@ public class DatHangAdapter extends ArrayAdapter<OderCustomer> {
             tvTongTien.setText(oderCustomer.getTongTien().toString());
 
 
-            List<Product> products = oderCustomer.getProducts();
-            sanPhamAdapter = new SanPhamAdapter(getContext(), products);
-            lvCTDatHang.setAdapter(sanPhamAdapter);
+
         }
         return convertView;
     }

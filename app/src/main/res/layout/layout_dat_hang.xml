@@ -2,57 +2,77 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#e9e6e6"
     android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Mã đặt hàng: "
-            android:textColor="#000000"/>
-        <TextView
-            android:layout_width="70dp"
-            android:layout_height="wrap_content"
-            android:text="12 "
-            android:id="@+id/DatHangMaDH"
-            android:textColor="#101010"/>
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="Tổng tiền: "
-            android:textColor="#000000"/>
-
-        <TextView
+        android:background="#faf8f8"
+        android:paddingTop="10dp"
+        android:paddingLeft="10dp"
+        android:paddingBottom="10dp"
+        android:paddingRight="10dp"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="Mã đặt hàng: "
+                android:fontFamily="sans-serif-light"
+                android:textSize="14dp"
+                android:textColor="#0b0000"/>
+            <TextView
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="12 "
+                android:fontFamily="sans-serif-light"
+                android:textSize="14dp"
+                android:id="@+id/DatHangMaDH"
+                android:textColor="#0b0000"/>
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="12000 "
-            android:id="@+id/DatHangTongTien"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:text="Ngày đặt: "
-        android:textColor="#000000"/>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="100dp"
+                android:textSize="13dp"
+                android:textColor="#5c5b5b"
+                android:layout_height="wrap_content"
+                android:text="Ngày đặt: "/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="12000 "
-        android:id="@+id/DatHangNgayDat"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13dp"
+                android:textColor="#5c5b5b"
+                android:text="12000 "
+                android:id="@+id/DatHangNgayDat"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="100dp"
+                android:fontFamily="sans-serif-light"
+                android:textSize="13dp"
+                android:textColor="#5c5b5b"
+                android:layout_height="wrap_content"
+                android:text="Tổng tiền: "/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="13dp"
+                android:textColor="#e61b05"
+                android:text="12000 "
+                android:id="@+id/DatHangTongTien"/>
+        </LinearLayout>
     </LinearLayout>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Chi tiết đơn hàng"
-        android:textColor="#000000"/>
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:id="@+id/lsvCTDonHang"></ListView>
+
+
+
 </LinearLayout>

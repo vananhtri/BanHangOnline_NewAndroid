@@ -5,7 +5,7 @@ import java.util.List;
 public class OderCustomer {
     int maDatHang;
     String ngayDat;
-    Double tongTien;
+    String  tongTien;
     List<Product> products;
 
     public OderCustomer() {
@@ -27,11 +27,11 @@ public class OderCustomer {
         this.ngayDat = ngayDat;
     }
 
-    public Double getTongTien() {
+    public String getTongTien() {
         return tongTien;
     }
 
-    public void setTongTien(Double tongTien) {
+    public void setTongTien(String tongTien) {
         this.tongTien = tongTien;
     }
 

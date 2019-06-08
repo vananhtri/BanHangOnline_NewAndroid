@@ -22,6 +22,7 @@
     </android.support.design.widget.AppBarLayout>
  <!-- > Nội dung thay đổi<!-->
     <android.support.v4.view.ViewPager
+        android:layout_marginTop="50dp"
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
