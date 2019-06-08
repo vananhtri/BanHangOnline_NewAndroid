@@ -25,7 +25,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.vananh.banhangfuniture.Constant.Constant;
-import com.example.vananh.banhangfuniture.Model.CustomerInfo;
+import com.example.vananh.banhangfuniture.Model.ResponseData;
 import com.example.vananh.banhangfuniture.R;
 import com.google.gson.Gson;
 
@@ -60,6 +60,7 @@ public class FragDangNhap extends Fragment {
 
     private EditText user, pass;
     private Button login, huy;
+
     // TODO: Rename and change types and number of parameters
     public static FragDangNhap newInstance(String param1, String param2) {
         FragDangNhap fragment = new FragDangNhap();
@@ -86,10 +87,10 @@ public class FragDangNhap extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        user=getActivity().findViewById(R.id.EditUser);
-        pass=getActivity().findViewById(R.id.EditPass);
-        login=getActivity().findViewById(R.id.ButtonLogin);
-        huy=getActivity().findViewById(R.id.ButtonHuy);
+        user = getActivity().findViewById(R.id.EditUser);
+        pass = getActivity().findViewById(R.id.EditPass);
+        login = getActivity().findViewById(R.id.ButtonLogin);
+        huy = getActivity().findViewById(R.id.ButtonHuy);
 
         //Login
         login.setOnClickListener(new View.OnClickListener() {
@@ -99,26 +100,26 @@ public class FragDangNhap extends Fragment {
             }
         });
     }
+
     private void login() {
         if (!validate()) {
             onLoginFailed();
             return;
-        }
-        else
-        {
+        } else {
             checkLogin();
             return;
         }
     }
+
     private void checkLogin() {
-        String userName= user.getText().toString();
-        String password=pass.getText().toString();
+        String userName = user.getText().toString();
+        String password = pass.getText().toString();
         RequestQueue queue = Volley.newRequestQueue(getContext());
-        String url = Constant.BASE_URL + "user/LoginMobile";
+        String url = Constant.BASE_URL + "api/MobileAPI/LoginMobile";
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("name",userName); //name giống với giá trị truyền vào bên mvc
-            jsonObject.put("pass",password);
+            jsonObject.put("emailOrPhone", userName); //name giống với giá trị truyền vào bên mvc
+            jsonObject.put("password", password);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -126,16 +127,14 @@ public class FragDangNhap extends Fragment {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject jsonObject) {
-                        try {
-                            String error  = jsonObject.getString("Error");
-                            if(!error.toString().equals("[]")) {
-                                onLoginFailed();
-                                return;
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                        Gson gson = new Gson();
+                        ResponseData responseData = gson.fromJson(String.valueOf(jsonObject), ResponseData.class);
+                        if (!responseData.getSuccess()) {
+                            onLoginFailed();
+                            return;
                         }
-                        parseData(jsonObject);
+
+                        parseData(responseData);
                         onLoginSuccess();
                     }
                 }, new Response.ErrorListener() {
@@ -146,47 +145,20 @@ public class FragDangNhap extends Fragment {
         });
         queue.add(stringRequest);
     }
-    public static int maNguoiDung;
 
     //save information to sharedReference
-    private void parseData(JSONObject jsonObject) {
-        try {
+    private void parseData(ResponseData responseData) {
 
-            SharedPreferences.Editor editor = getContext().getSharedPreferences("MyPref", MODE_PRIVATE).edit();
+        SharedPreferences.Editor editor = getContext().getSharedPreferences("MyPref", MODE_PRIVATE).edit();
 
-            JSONObject obj   = jsonObject.getJSONObject("Customer");
-            CustomerInfo customerInfo = new CustomerInfo();
-            customerInfo.setAddress(obj.getString("DiaChi"));
-            customerInfo.setEmail(obj.getString("Email"));
-            customerInfo.setId(obj.getInt("MaKhachHang"));
-            customerInfo.setName(obj.getString("TenKhachHang"));
-            customerInfo.setPhoneNunber(obj.getString("SoDienThoai"));
+        Gson gson = new Gson();
+        String join = gson.toJson(responseData.getData());
+        editor.clear();
+        editor.putString("customerInfo",join);
+        editor.commit();
 
 
-            //save local
-
-            Gson gson = new Gson();
-            editor.clear();
-            String json = gson.toJson(customerInfo);
-            editor.putString("customerInfo", json);
-            editor.commit();
-
-
-            //redirect to Home  Page;
-            FragHome fragment = new FragHome();
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.main_contents, fragment);
-            fragmentTransaction.addToBackStack(null);
-            fragmentTransaction.commit();
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-    private void onLoginSuccess() {
-        Toast.makeText(getContext(),"Login success",Toast.LENGTH_LONG).show();
+        //redirect to Home  Page;
         FragHome fragment = new FragHome();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -195,29 +167,38 @@ public class FragDangNhap extends Fragment {
         fragmentTransaction.commit();
 
 
+    }
 
+    private void onLoginSuccess() {
+        Toast.makeText(getContext(), "Login success", Toast.LENGTH_LONG).show();
+        FragHome fragment = new FragHome();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_contents, fragment);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
     }
 
     private void onLoginFailed() {
         Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
         login.setEnabled(true);
     }
+
     private boolean validate() {
-        boolean valid=true;
-        String username=user.getText().toString();
-        String password=pass.getText().toString();
-        if (username.isEmpty())
-        {
-            valid= false;
+        boolean valid = true;
+        String username = user.getText().toString();
+        String password = pass.getText().toString();
+        if (username.isEmpty()) {
+            valid = false;
             user.setError("Không để trống tên đăng nhập");
         }
-        if (password.isEmpty())
-        {
-            valid= false;
+        if (password.isEmpty()) {
+            valid = false;
             pass.setError("Không để trống mật khẩu");
         }
         return valid;
     }
+
     @Override
     public void onDetach() {
         super.onDetach();

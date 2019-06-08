@@ -18,10 +18,11 @@ import java.util.List;
 
 public class DatHangAdapter extends ArrayAdapter<OderCustomer> {
 
-    private  SanPhamAdapter sanPhamAdapter;
-    private  ListView lvChiTiet;
+    private SanPhamAdapter sanPhamAdapter;
+    private ListView lvChiTiet;
+
     public DatHangAdapter(@NonNull Context context, @NonNull List<OderCustomer> objects) {
-        super(context, 0,objects);
+        super(context, 0, objects);
     }
 
     @NonNull
@@ -33,11 +34,11 @@ public class DatHangAdapter extends ArrayAdapter<OderCustomer> {
         }
         TextView tvMaDatHang = convertView.findViewById(R.id.DatHangMaDH);
         TextView tvTongTien = convertView.findViewById(R.id.DatHangTongTien);
-        TextView tvNgayDat=convertView.findViewById(R.id.DatHangNgayDat);
+        TextView tvNgayDat = convertView.findViewById(R.id.DatHangNgayDat);
         ListView lvCTDatHang = convertView.findViewById(R.id.lsvCTDonHang);
         OderCustomer oderCustomer = getItem(position);
-        if(oderCustomer !=null){
-            tvMaDatHang.setText(oderCustomer.getMaDatHang());
+        if (oderCustomer != null) {
+            tvMaDatHang.setText(String.valueOf(oderCustomer.getMaDatHang()));
             tvNgayDat.setText(oderCustomer.getNgayDat());
             tvTongTien.setText(oderCustomer.getTongTien().toString());
 

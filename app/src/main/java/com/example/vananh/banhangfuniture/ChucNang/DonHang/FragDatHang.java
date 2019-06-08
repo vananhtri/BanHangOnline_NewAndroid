@@ -17,7 +17,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.vananh.banhangfuniture.Adapter.DatHangAdapter;
 import com.example.vananh.banhangfuniture.Constant.Constant;
@@ -26,12 +28,16 @@ import com.example.vananh.banhangfuniture.Model.OderCustomer;
 import com.example.vananh.banhangfuniture.Model.Product;
 import com.example.vananh.banhangfuniture.R;
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.reflect.TypeToken;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -59,6 +65,7 @@ public class FragDatHang extends Fragment {
     private DatHangAdapter datHangAdapter;
     private List<OderCustomer> oderCustomers;
     private ListView lvDatHang;
+
     public FragDatHang() {
         // Required empty public constructor
     }
@@ -108,15 +115,15 @@ public class FragDatHang extends Fragment {
         oderCustomers = new ArrayList<>();
 
         //get info customer
-        SharedPreferences mPrefs =  getContext().getSharedPreferences("MyPref", MODE_PRIVATE);
+        SharedPreferences mPrefs = getContext().getSharedPreferences("MyPref", MODE_PRIVATE);
         Gson gson = new Gson();
-        if(mPrefs == null) {
+        if (mPrefs == null) {
             Toast.makeText(getContext(), "Bạn phải đăng nhập để xem đơn hàng", Toast.LENGTH_LONG).show();
             return;
         }
         String json = mPrefs.getString("customerInfo", "");
 
-        if(json.isEmpty()) {
+        if (json.isEmpty()) {
             Toast.makeText(getContext(), "Bạn phải đăng nhập để xem đơn hàng", Toast.LENGTH_LONG).show();
             return;
         }
@@ -129,28 +136,28 @@ public class FragDatHang extends Fragment {
     }
 
 
-    private void  getData(CustomerInfo customerInfo){
+    private void getData(CustomerInfo customerInfo) {
         int idCustomer = customerInfo.getId();
         int orderStatus = 1; // Đã đặt
         RequestQueue queue = Volley.newRequestQueue(getContext());
-        String url = Constant.BASE_URL + "orderManagement/getOderByState?status="+orderStatus +"&idCustomer="+idCustomer;
-        JSONObject jsonObject = new JSONObject();
+        String url = Constant.BASE_URL + "api/MobileApi/GetOrderStatus?status=" + orderStatus + "&idCustomer=" + idCustomer;
 
-        final JsonObjectRequest stringRequest = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        final JsonArrayRequest stringRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject jsonObject) {
-                        try {
-                            boolean status  = jsonObject.getBoolean("status");
-                            if(!status) {
-                                Toast.makeText(getContext(), "Bạn chưa có đơn hàng nào", Toast.LENGTH_LONG).show();
-                                return;
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    public void onResponse(JSONArray jsonArray) {
+
+                        Gson gson = new Gson();
+
+                        Type typeOfT = new TypeToken<List<OderCustomer>>() {
+                        }.getType();
+                        List<OderCustomer> orders = gson.fromJson(String.valueOf(jsonArray), typeOfT);
+                        if (orders.size() <= 0) {
+                            Toast.makeText(getContext(), "Bạn chưa có đơn hàng nào", Toast.LENGTH_LONG).show();
+                            return;
                         }
-                        oderCustomers =  parseData(jsonObject);
-                        datHangAdapter = new DatHangAdapter(getContext(),oderCustomers );
+                        oderCustomers = orders;
+                        datHangAdapter = new DatHangAdapter(getContext(), oderCustomers);
                         lvDatHang.setAdapter(datHangAdapter);
                     }
                 }, new Response.ErrorListener() {
@@ -163,12 +170,13 @@ public class FragDatHang extends Fragment {
         //code
 
     }
-    private  List<OderCustomer> parseData(JSONObject jsonObject){
+
+    private List<OderCustomer> parseData(JSONObject jsonObject) {
         List<OderCustomer> oderCustomers = new ArrayList<>();
-        List<Product> products= new ArrayList<>();
+        List<Product> products = new ArrayList<>();
         try {
             JSONArray arrayOrders = new JSONArray(jsonObject);
-            for(int i = 0; i<arrayOrders.length();i++){
+            for (int i = 0; i < arrayOrders.length(); i++) {
                 JSONObject obj = arrayOrders.getJSONObject(i);
                 OderCustomer oderCustomer = new OderCustomer();
                 oderCustomer.setMaDatHang(obj.getInt("Id_DatHang"));
@@ -177,7 +185,7 @@ public class FragDatHang extends Fragment {
 
                 //products
                 JSONArray arrayProducts = new JSONArray(obj.getJSONObject("order"));
-                for (int j = 0;j<arrayProducts.length();j++){
+                for (int j = 0; j < arrayProducts.length(); j++) {
                     JSONObject objProduct = arrayProducts.getJSONObject(j);
                     Product product = new Product();
                     product.setHinh(objProduct.getString("Hinh"));
@@ -197,6 +205,7 @@ public class FragDatHang extends Fragment {
         }
         return oderCustomers;
     }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);

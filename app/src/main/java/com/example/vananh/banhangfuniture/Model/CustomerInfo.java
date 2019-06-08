@@ -1,63 +1,53 @@
 package com.example.vananh.banhangfuniture.Model;
 
 public class CustomerInfo {
-    int Id;
-    String Name;
-    String Address;
-    String PhoneNunber;
-    String Email;
+    int id;
+    String name;
+    String address;
+    String phoneNunber;
+    String email;
 
     public CustomerInfo() {
     }
 
-    public CustomerInfo(int id, String name, String address, String phoneNunber, String email) {
-        Id = id;
-        Name = name;
-        Address = address;
-        PhoneNunber = phoneNunber;
-        Email = email;
-    }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public void setId(int id) {
-        Id = id;
+        this.id = id;
     }
 
     public String getName() {
-        return Name;
+        return name;
     }
 
     public void setName(String name) {
-        Name = name;
+        this.name = name;
     }
 
     public String getAddress() {
-        return Address;
+        return address;
     }
 
     public void setAddress(String address) {
-        Address = address;
+        this.address = address;
     }
 
     public String getPhoneNunber() {
-        return PhoneNunber;
+        return phoneNunber;
     }
 
     public void setPhoneNunber(String phoneNunber) {
-        PhoneNunber = phoneNunber;
+        this.phoneNunber = phoneNunber;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public void setEmail(String email) {
-        Email = email;
+        this.email = email;
     }
-
-
-
 }

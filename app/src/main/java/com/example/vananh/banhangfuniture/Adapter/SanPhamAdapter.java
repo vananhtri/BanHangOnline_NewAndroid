@@ -36,25 +36,25 @@ public class SanPhamAdapter extends ArrayAdapter<Product> {
         }
         TextView tvTenSP = convertView.findViewById(R.id.txtTenSanPham);
         TextView tvSoLuong = convertView.findViewById(R.id.txtSoLuong);
-        TextView tvThanhTien=convertView.findViewById(R.id.txtThanhTien);
+        TextView tvThanhTien = convertView.findViewById(R.id.txtThanhTien);
         ImageView img = convertView.findViewById(R.id.imgSanPham);
 
 
-
         Product product = getItem(position);
-        if(product !=null){
+        if (product != null) {
 
             tvTenSP.setText(product.getTenSanPham());
-            tvSoLuong.setText(product.getSoLuong());
+            tvSoLuong.setText(String.valueOf(product.getSoLuong()));
             tvThanhTien.setText(product.getThanhTien());
-            String urlImage =  product.getHinh();
-            if(!urlImage.isEmpty()) {
+            String urlImage = product.getHinh();
+            if ( urlImage != null && !urlImage.isEmpty()) {
                 new DownloadImageTask(img)
                         .execute(urlImage);
             }
         }
         return convertView;
     }
+
     private class DownloadImageTask extends AsyncTask<String, Void, Bitmap> {
         ImageView bmImage;
 
