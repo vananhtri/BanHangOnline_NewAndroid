@@ -170,7 +170,7 @@ public class FragDangNhap extends Fragment {
     }
 
     private void onLoginSuccess() {
-        Toast.makeText(getContext(), "Login success", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Đăng nhập thành công", Toast.LENGTH_LONG).show();
         FragHome fragment = new FragHome();
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -180,7 +180,7 @@ public class FragDangNhap extends Fragment {
     }
 
     private void onLoginFailed() {
-        Toast.makeText(getContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(), "Mật khẩu hoặc tên đăng nhập không đúng", Toast.LENGTH_LONG).show();
         login.setEnabled(true);
     }
 

@@ -7,22 +7,20 @@
     tools:context=".ChucNang.DonHang.FragDatHang">
 
     <pl.droidsonroids.gif.GifImageView
-        android:layout_width="100dp"
-        android:layout_gravity="center"
-        android:layout_height="match_parent"
-        android:src="@drawable/loading"
         android:id="@+id/gifLoading"
-        android:visibility="invisible"
-        />
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:src="@drawable/loading"
+        android:visibility="invisible" />
 
-<ListView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/lsvDatHang">
+    <ListView
+        android:id="@+id/lsvDatHang"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</ListView>
+    </ListView>
     <!-- TODO: Update blank fragment layout -->
-
 
 
 </FrameLayout>

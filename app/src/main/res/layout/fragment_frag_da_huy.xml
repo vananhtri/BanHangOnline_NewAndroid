@@ -3,12 +3,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ChucNang.DonHang.FragDaHuy">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/gifLoadingDaHuy"
+        android:layout_width="100dp"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_gravity="center"
+        android:src="@drawable/loading"
+        android:visibility="invisible" />
+
+    <ListView
+        android:id="@+id/lsvDatHangDaHuy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
 
 </FrameLayout>

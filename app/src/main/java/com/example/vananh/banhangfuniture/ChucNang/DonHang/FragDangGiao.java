@@ -1,14 +1,45 @@
 package com.example.vananh.banhangfuniture.ChucNang.DonHang;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.vananh.banhangfuniture.Adapter.DatHangAdapter;
+import com.example.vananh.banhangfuniture.Constant.Constant;
+import com.example.vananh.banhangfuniture.Model.CustomerInfo;
+import com.example.vananh.banhangfuniture.Model.OderCustomer;
+import com.example.vananh.banhangfuniture.Model.Product;
 import com.example.vananh.banhangfuniture.R;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+
+import pl.droidsonroids.gif.GifImageView;
+
+import static android.content.Context.MODE_PRIVATE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,21 +58,17 @@ public class FragDangGiao extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private ListView lvDatHangGiaoHang;
+    private DatHangAdapter datHangAdapter;
+    private GifImageView gifImageView;
+    private List<OderCustomer> oderCustomers;
     private OnFragmentInteractionListener mListener;
 
     public FragDangGiao() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragDangGiao.
-     */
+
     // TODO: Rename and change types and number of parameters
     public static FragDangGiao newInstance(String param1, String param2) {
         FragDangGiao fragment = new FragDangGiao();
@@ -68,6 +95,88 @@ public class FragDangGiao extends Fragment {
         return inflater.inflate(R.layout.fragment_frag_dang_giao, container, false);
     }
 
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        lvDatHangGiaoHang = getActivity().findViewById(R.id.lsvDatHangDangGiao);
+        oderCustomers = new ArrayList<>();
+        gifImageView = getActivity().findViewById(R.id.gifLoadingDangGiao);
+
+        //get info customer
+        SharedPreferences mPrefs = getContext().getSharedPreferences("MyPref", MODE_PRIVATE);//Lưu trạng thái của app(auto tạo tập tin myPref.xml)
+        Gson gson = new Gson(); //Thư viện để chuyển đổi từ đối tượng java sang Json
+        if (mPrefs == null) {
+            Toast.makeText(getContext(), "Bạn phải đăng nhập để xem đơn hàng", Toast.LENGTH_LONG).show();
+            return;
+        }
+        String json = mPrefs.getString("customerInfo", "");
+
+        if (json.isEmpty()) {
+            Toast.makeText(getContext(), "Bạn phải đăng nhập để xem đơn hàng", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        final CustomerInfo customerInfo = gson.fromJson(json, CustomerInfo.class);
+
+        getData(customerInfo);
+        lvDatHangGiaoHang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), ActivityDetailOrder.class);
+                OderCustomer order = oderCustomers.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("products", (ArrayList<Product>) order.getProducts());
+                intent.putExtra("detail", bundle);
+                startActivity(intent);
+            }
+        });
+
+    }
+
+    private void getData(CustomerInfo customerInfo) {
+        gifImageView.setVisibility(View.VISIBLE); // sho loading
+        int idCustomer = customerInfo.getId();
+        int orderStatus = 3; // Đã đặt
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        String url = Constant.BASE_URL + "api/MobileApi/GetOrderStatus?status=" + orderStatus + "&idCustomer=" + idCustomer;
+
+        final JsonArrayRequest stringRequest = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+                        gifImageView.setVisibility(View.INVISIBLE); //hide loading
+                        Gson gson = new Gson();
+
+                        Type typeOfT = new TypeToken<List<OderCustomer>>() {
+                        }.getType();
+                        final List<OderCustomer> orders = gson.fromJson(String.valueOf(jsonArray), typeOfT);
+                        if (orders.size() <= 0) {
+                            Toast.makeText(getContext(), "Bạn chưa có đơn hàng nào", Toast.LENGTH_LONG).show();
+                            return;
+                        }
+                        oderCustomers = orders;
+                        datHangAdapter = new DatHangAdapter(getContext(), oderCustomers);
+                        lvDatHangGiaoHang.setAdapter(datHangAdapter);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                gifImageView.setVisibility(View.INVISIBLE); //hide loading
+                Toast.makeText(getContext(), volleyError.toString(), Toast.LENGTH_LONG).show();
+            }
+        });
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                5000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(stringRequest);
+        //code
+
+    }
+
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -81,16 +190,7 @@ public class FragDangGiao extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

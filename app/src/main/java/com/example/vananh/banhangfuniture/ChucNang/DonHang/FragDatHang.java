@@ -150,14 +150,24 @@ public class FragDatHang extends Fragment {
         CustomerInfo customerInfo = gson.fromJson(json, CustomerInfo.class);
 
         getData(customerInfo);
-
+        lvDatHang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(), ActivityDetailOrder.class);
+                OderCustomer order = oderCustomers.get(position);
+                Bundle bundle = new Bundle();
+                bundle.putParcelableArrayList("products", (ArrayList<Product>) order.getProducts());
+                intent.putExtra("detail", bundle);
+                startActivity(intent);
+            }
+        });
 
     }
 
 
     private void getData(CustomerInfo customerInfo) {
-        gifImageView.setVisibility(View.VISIBLE); // sho loading
-        int idCustomer = customerInfo.getId();
+        gifImageView.setVisibility(View.VISIBLE); // show loading
+        int idCustomer = customerInfo.getId(); //lấy id khách hàng
         int orderStatus = 1; // Đã đặt
         RequestQueue queue = Volley.newRequestQueue(getContext());
         String url = Constant.BASE_URL + "api/MobileApi/GetOrderStatus?status=" + orderStatus + "&idCustomer=" + idCustomer;
@@ -179,17 +189,7 @@ public class FragDatHang extends Fragment {
                         oderCustomers = orders;
                         datHangAdapter = new DatHangAdapter(getContext(), oderCustomers);
                         lvDatHang.setAdapter(datHangAdapter);
-                        lvDatHang.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                Intent intent = new Intent(getContext(), ActivityDetailOrder.class);
-                                OderCustomer order = orders.get(position);
-                                Bundle bundle = new Bundle();
-                                bundle.putParcelableArrayList("products", (ArrayList<Product>) order.getProducts());
-                                intent.putExtra("detail", bundle);
-                                startActivity(intent);
-                            }
-                        });
+
                     }
                 }, new Response.ErrorListener() {
             @Override

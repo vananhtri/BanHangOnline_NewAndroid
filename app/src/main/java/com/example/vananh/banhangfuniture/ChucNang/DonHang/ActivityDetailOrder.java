@@ -22,7 +22,6 @@ public class ActivityDetailOrder extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_order);
         setTitle("Đơn hàng");
-
         lvCTDatHang = findViewById(R.id.lsvCTDonHang);
         Intent intent = getIntent();
         Bundle bundle = intent.getBundleExtra("detail");
