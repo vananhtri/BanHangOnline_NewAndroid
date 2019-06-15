@@ -48,19 +48,10 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //mặc định load login
-        Intent intent = getIntent();
-        int ketQua = intent.getIntExtra("ketQua", 0);
-       // if(ketQua == 0){
-           // FragDangNhap DangNhap = new FragDangNhap();
-            //FragmentManager manager = getSupportFragmentManager();
-           // manager.beginTransaction().replace(R.id.content_main, DangNhap, DangNhap.getTag()).commit();
-        //}
-        //else {
-            //FragHome flagHome = new FragHome();
-            //FragmentManager manager = getSupportFragmentManager();
-           // manager.beginTransaction().replace(R.id.content_main, flagHome, flagHome.getTag()).addToBackStack(null).commit();
-        //}
+        //mặc định load home page
+        FragHome fragHome= new FragHome();
+        FragmentManager manager= getSupportFragmentManager();
+        manager.beginTransaction().replace(R.id.main_contents, fragHome, fragHome.getTag()).addToBackStack(null).commit();
     }
 
     @Override

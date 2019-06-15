@@ -6,20 +6,21 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.vananh.banhangfuniture.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FragHome.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FragHome#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.io.BufferedReader;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+
 public class FragHome extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +37,12 @@ public class FragHome extends Fragment {
         // Required empty public constructor
     }
 
+    public void onResume() {
+        super.onResume();
+        getActivity().setTitle("GIỚI THIỆU");
+    }
+
+    private TextView txtgioiThieu;
 
     // TODO: Rename and change types and number of parameters
     public static FragHome newInstance(String param1, String param2) {
@@ -67,6 +74,56 @@ public class FragHome extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        txtgioiThieu = (TextView) getView().findViewById(R.id.textgioithieu);
+//        ReadFileGioiThieu();
+        LoadData("gioithieua.txt");
+    }
+    public String LoadData(String inFile) {
+        String tContents = "";
+        try {
+            InputStream stream = getActivity().getAssets().open(inFile);
+
+            int size = stream.available();
+            byte[] buffer = new byte[size];
+            stream.read(buffer);
+            stream.close();
+            tContents = new String(buffer);
+            txtgioiThieu.setText(tContents.toString());
+        } catch (IOException e) {
+            // Handle exceptions here
+        }
+
+        return tContents;
+
+    }
+    private void ReadFileGioiThieu() {
+        String data;
+        int id = getRawResIdByName("gioithieua");
+        InputStream in = getActivity().getResources().openRawResource(id);
+        InputStreamReader inreader = new InputStreamReader(in);
+        BufferedReader bufreader = new BufferedReader(inreader);
+        StringBuilder builder = new StringBuilder();
+        if (in != null) {
+            try {
+                while ((data = bufreader.readLine()) != null) {
+                    builder.append(data);
+                    builder.append("\n");
+                }
+                in.close();
+                txtgioiThieu.setText(builder.toString());
+            } catch (IOException ex) {
+                Log.e("ERROR", ex.getMessage());
+            }
+        }
+
+    }
+
+    private int getRawResIdByName(String myvideo) {
+        String pkgName = getActivity().getPackageName();
+        // Trả về 0 nếu không tìm thấy.
+        int resID = getActivity().getResources().getIdentifier(myvideo, "raw", pkgName);
+        Log.i("AndroidVideoView", "Res Name: " + myvideo + "==> Res ID = " + resID);
+        return resID;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -77,23 +134,13 @@ public class FragHome extends Fragment {
     }
 
 
-
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);

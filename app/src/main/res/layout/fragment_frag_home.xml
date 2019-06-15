@@ -2,13 +2,42 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="fill_parent"
+    android:orientation="horizontal"
     tools:context=".ChucNang.FragHome">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="fill_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:text="GIỚI THIỆU"
+            android:textColor="#030303"
+            android:textSize="15dp"
+            android:gravity="center"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:src="@drawable/nhaxinh" />
+        <TextView
+            android:textColor="#131212"
+            android:layout_marginTop="10dp"
+            android:text="1231231231"
+            android:textSize="15dp"
+
+            android:id="@+id/textgioithieu"
+            android:layout_width="match_parent"
+            android:layout_height="fill_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+    </LinearLayout>
+
+
 
 </FrameLayout>
